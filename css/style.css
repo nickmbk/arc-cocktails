@@ -1,0 +1,7 @@
+.ingredients, .garnish {
+    display: none;
+}
+
+.show {
+    display: block;
+}
