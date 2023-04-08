@@ -1,14 +1,6 @@
-// ingredients
-
-function showSection(event) {
+function showIngredientsList(event) {
     event.preventDefault();
-    const clickedButton = `.${event.srcElement.id}`;
-    const element = document.querySelector(clickedButton);
-    element.classList.toggle('show');
+    document.querySelector('.choose-ingredients').classList.toggle('show');
 }
 
-document.getElementById('ingredients').addEventListener('click', showSection);
-document.getElementById('garnish').addEventListener('click', showSection);
-
-
-
+document.querySelector('.add-ingredients').addEventListener('click', showIngredientsList);
