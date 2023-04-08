@@ -1,5 +1,7 @@
 <?php
-
+    
+    // include php file to connect to database
+    include('config/db_connect.php');
 
 ?>
 
