@@ -1,0 +1,61 @@
+<section class="choose-ingredients">
+        <form action="add.php" method="POST">
+            <!-- php function to grab the ingredients list from the db -->
+            <?php $result = getIngredients(); ?>
+
+            <!-- these are to check if the previous rows category or subcategory are the same to help determine whether to create new divs and headings or not -->
+            <?php $previousCategory = ''; ?>
+            <?php $previousSubcategory = ''; ?>
+
+            <!-- create a while loop to check each row of the table -->
+            <?php while($row = mysqli_fetch_assoc($result)): ?>
+
+                    <!-- create a div and h4 heading for each category -->
+                    <?php if($row['category'] !== $previousCategory): ?>
+                        <?php if($previousCategory !== ''): ?>
+                            </div>
+                        <?php endif; ?>
+                        <div class="category">
+                            <h4><?php echo $row['category'] ?></h4>
+                    <?php endif; ?>
+
+                    <!-- create a div and h5 heading for each sub-category -->
+                    <?php if($row['subcategory'] !== $previousSubcategory): ?>
+                        <?php if($previousSubcategory !== ''): ?>
+                            </div>
+                        <?php endif; ?>
+                        <div class="subcategory">
+                            <h5><?php echo $row['subcategory'] ?></h5>
+                    <?php endif; ?>
+
+                    <!-- create a checkbox and label for each ingredient -->
+                    <input type="number" name=<?php echo 'ingredient' . $row['id']; ?> id=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?> value=<?php echo $ingredientsArray[intval($row['id']) + 1] ?? ''; ?>>
+                    <label for=<?php echo str_replace(' ', '-', strtolower($row['ingredient']) . '-' . $row['measurement']); ?>><?php echo $row['measurement']; ?></label>
+                    <label for=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?>><?php echo $row['ingredient']; ?></label>
+                    <br />
+
+                    <!-- copy the current category / subcategory to help determine at the beginning of the loop whether to create new divs and headings -->
+                    <?php $previousCategory = $row['category']; ?>
+                    <?php $previousSubcategory = $row['subcategory']; ?>
+            <?php endwhile; ?>
+                        
+    
+            <input class="add-ingredients" type="submit" name="submit-ingredients" value="Add ingredients" >
+        </form>
+    </section>
+
+
+
+    <section class="choose-garnish">
+                <?php $result = getGarnish(); ?>
+
+                <?php while($row = mysqli_fetch_assoc($result)): ?>
+
+                    <!-- create a checkbox and label for each ingredient -->
+                    <input type="checkbox" name=<?php echo 'garnish' . $row['id']; ?> id=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?> value=<?php echo str_replace(' ', '-', $row['ingredient']); ?>>
+                    <label for=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?>><?php echo $row['ingredient']; ?></label>
+                    <br />
+
+                <?php endwhile; ?>
+
+        </section>
