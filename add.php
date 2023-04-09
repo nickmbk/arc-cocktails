@@ -2,38 +2,31 @@
 
     include('config/db_connect.php');
     // include('config/get_ingredients.php');
-    
-    function getIngredients() {
-        include('config/db_connect.php');
-
-        // get ingredient
-        $sql = "SELECT * FROM ingredients ORDER BY category, subcategory, ingredient";
-
-        // get results
-        return mysqli_query($conn, $sql);
-    }
-
-    function getGarnish() {
-        include('config/db_connect.php');
-
-        // get ingredient
-        $sql = "SELECT * FROM garnish ORDER BY ingredient";
-
-        // get results
-        return mysqli_query($conn, $sql);
-    }
 
     $title = '';
     $mix_method = '';
     $glass = '';
-    $ingredients = '';
-    $garnish = '';
-    $step1 = '';
+    $ingredient1 = '';
+    $ingredient2 = '';
+    $ingredient3 = '';
+    $ingredient4 = '';
+    $ingredient5 = '';
+    $ingredient6 = '';
+    $ingredient7 = '';
+    $ingredient8 = '';
+    $ingredient9 = '';
+    $ingredient10 = '';
+    $garnish1 = '';
+    $garnish2 = '';
+    $garnish3 = '';
+    $instruction1 = '';
+    $instruction2 = '';
+    $instruction3 = '';
+    $instruction4 = '';
+    $instruction5 = '';
     $errors = ['title' => '', 'mix_method' => '', 'glass' => '', 'ingredients' => '', 'instructions' => ''];
 
     if(isset($_POST['submit'])){
-        print_r($_POST);
-
         // check title
         if(empty($_POST['title'])){
             $errors['title'] = 'A title is required <br />';
@@ -59,14 +52,14 @@
         }
 
         // // check ingredients
-        // if(empty($_POST['ingredients'])){
-        //     $errors['ingredients'] = 'Please choose at least 2 ingredients <br />';
-        //     //need to check if 2 have been selected, minimum
-        // } else {
-        //     $ingredient1 = $_POST['ingredient1'] ?? '';
-        //     $ingredient2 = $_POST['ingredient2'] ?? '';
-        //     $ingredient3 = $_POST['ingredient3'] ?? '';
-        // }
+        if($ingredientsCount < 2) {
+            $errors['ingredients'] = 'Please choose at least two ingredients';
+        } elseif($ingredientsCount > 10) {
+            $errors['ingredients'] = 'You can only add a maximum of 10 ingredients';
+        } else {
+            // show added ingredients in showIngredients div
+            
+        }
 
         // if(!empty($_POST['garnish1']) || !empty($_POST['garnish2'])){
         //     $garnish1 = $_POST['garnish1'] ?? '';
@@ -88,12 +81,19 @@
         //     $title = mysqli_real_escape_string($conn, $_POST['title']);
         //     $mix_method = mysqli_real_escape_string($conn, $_POST['mix_method']);
         //     $glass = mysqli_real_escape_string($conn, $_POST['glass']);
-        //     $ingredient1 = mysqli_real_escape_string($conn, $_POST['ingredient1'] ?? '');
-        //     $ingredient2 = mysqli_real_escape_string($conn, $_POST['ingredient2'] ?? '');
-        //     $ingredient3 = mysqli_real_escape_string($conn, $_POST['ingredient3'] ?? '');
+        //     $counter = 1
+        //     foreach($ingredientsArray as $id -> $quantity){
+            //        if ($quantity > 0 && $counter !== 10){
+            //             $ingredient . $counter = intval($id);
+            //             $ingredient_measurement . $counter = number_format ($quantity, 2);
+            //             $counter++;
+            //        }
+        //         
+        //     }
         //     $garnish1 = mysqli_real_escape_string($conn, $_POST['garnish1'] ?? '');
         //     $garnish2 = mysqli_real_escape_string($conn, $_POST['garnish2'] ?? '');
         //     $step1 = mysqli_real_escape_string($conn, $_POST['step1']);
+
 
         //     // create sql
         //     $sql = "INSERT INTO cocktails(title,mix_method,glass,step1) VALUES('$title', '$mix_method', '$glass', '$step1')";
@@ -183,93 +183,44 @@
         </section>
 
         <!-- ingredients -->
-        <h3>Ingredients</h3>
+        <section class="ingredients">
+            <h3>Ingredients</h3>
 
-        <section class="show-ingredients">
-            <button class="add-ingredients">Add</button>
+            <div class="ingredients-list">
+                <input type="text" id="ingredient1" name="ingredient1" value="">
+                <input type="text" id="ingredient2" name="ingredient2" value="">
+                <button class="add-ingredient">+ Add Ingredient</button>
+            </div>
         </section>
-
-        <section class="choose-ingredients">
-                <!-- php function to grab the ingredients list from the db -->
-                <?php $result = getIngredients(); ?>
-
-                <!-- these are to check if the previous rows category or subcategory are the same to help determine whether to create new divs and headings or not -->
-                <?php $previousCategory = ''; ?>
-                <?php $previousSubcategory = ''; ?>
-
-                <!-- create a while loop to check each row of the table -->
-                <?php while($row = mysqli_fetch_assoc($result)): ?>
-
-                        <!-- create a div and h4 heading for each category -->
-                        <?php if($row['category'] !== $previousCategory): ?>
-                            <?php if($previousCategory !== ''): ?>
-                                </div>
-                            <?php endif; ?>
-                            <div class="category">
-                                <h4><?php echo $row['category'] ?></h4>
-                        <?php endif; ?>
-
-                        <!-- create a div and h5 heading for each sub-category -->
-                        <?php if($row['subcategory'] !== $previousSubcategory): ?>
-                            <?php if($previousSubcategory !== ''): ?>
-                                </div>
-                            <?php endif; ?>
-                            <div class="subcategory">
-                                <h5><?php echo $row['subcategory'] ?></h5>
-                        <?php endif; ?>
-
-                        <!-- create a checkbox and label for each ingredient -->
-                        <input type="checkbox" name=<?php echo 'ingredient' . $row['id']; ?> id=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?> value=<?php echo str_replace(' ', '-', $row['ingredient']); ?>>
-                        <label for=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?>><?php echo $row['ingredient']; ?></label>
-                        <br />
-
-                        <!-- copy the current category / subcategory to help determine at the beginning of the loop whether to create new divs and headings -->
-                        <?php $previousCategory = $row['category']; ?>
-                        <?php $previousSubcategory = $row['subcategory']; ?>
-
-                <?php endwhile; ?>
-                        
-            <!-- show errors -->
-            <div><?php echo $errors['ingredients'] ?></div>
-
-        </section>
-
+        
         <!-- garnish -->
-        <h3>Garnish</h3>
+        <section class="garnishes">
+            <h3>Garnish</h3>
 
-        <section class="choose-garnish">
-                <?php $result = getGarnish(); ?>
-
-                <?php while($row = mysqli_fetch_assoc($result)): ?>
-
-                    <!-- create a checkbox and label for each ingredient -->
-                    <input type="checkbox" name=<?php echo 'garnish' . $row['id']; ?> id=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?> value=<?php echo str_replace(' ', '-', $row['ingredient']); ?>>
-                    <label for=<?php echo str_replace(' ', '-', strtolower($row['ingredient'])); ?>><?php echo $row['ingredient']; ?></label>
-                    <br />
-
-                <?php endwhile; ?>
-
+            <div class="garnish-list">
+                <button class="add-garnish">+ Add Garnish</button>
+            </div>
         </section>
 
-        <section class="show-garnish">
-            <button class="add-garnish">Add</button>
-        </section>
+        <!-- ingredients -->
+        <section class="instructions">
+            <h3>Instructions</h3>
 
-        <!-- steps -->
-        <label for="step">Step</label>
-        <br />
-        <input type="text" name="step1" id="step" value="<?php echo htmlspecialchars($step1); ?>">
-        <br />
-        <!-- show errors -->
-        <div><?php echo $errors['instructions'] ?></div>
+            <div class="instructions-list">
+                <input type="text" id="instruction1" name="instruction1" value="">
+                <button class="add-instruction">+ Add Instruction</button>
+            </div>
+
+            <!-- show errors -->
+            <div><?php echo $errors['instructions'] ?></div>
+        </section>
 
         <!-- submit button -->
         <input type="submit" name="submit" value="Submit">
 
     </form>
 
-
-
+    
 
     <?php include('templates/footer.php') ?>
     
